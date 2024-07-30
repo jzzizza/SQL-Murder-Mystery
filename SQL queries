@@ -1,0 +1,68 @@
+--explore what the crime_scene_report table looks like
+SELECT * 
+FROM crime_scene_report
+
+--find  murders in SQL city on January 18, 2018
+SELECT * 
+FROM crime_scene_report
+WHERE type = "murder"
+AND city = "SQL City"
+AND date = 20180115
+
+-- explore what the person table looks like 
+SELECT * 
+FROM person
+
+--find who lived the last house on Northwetern Dr
+SELECT *, MAX(address_number) 
+FROM person
+WHERE address_street_name = "Northwestern Dr"
+
+-- find Annabel that lives on Franklin Ave        
+SELECT *
+FROM person
+WHERE name LIKE "Annabel%" AND address_street_name = "Franklin Ave"
+
+--find what the two witnesses said in their interviews
+SELECT *
+FROM interview
+WHERE person_id = 14887
+OR person_id = 16371
+
+--find who matches all identifiers in both witness’ interviews 
+SELECT *
+FROM get_fit_now_check_in
+JOIN get_fit_now_member
+	ON membership_id = get_fit_now_member.id
+JOIN person
+	ON get_fit_now_member.person_id = person.id
+JOIN drivers_license
+	ON license_id = drivers_license.id
+WHERE membership_status = "gold"
+AND membership_id LIKE "48Z%"
+AND plate_number LIKE "%H42W%"
+AND gender = "male"
+
+--BONUS!
+
+--find the murder’s interview transcript 
+SELECT transcript
+FROM interview
+JOIN person
+	ON person_id = id
+	WHERE name = "Jeremy Bowers"
+
+--find the person who hired murder per murder’s description in interview transcript 
+SELECT *
+FROM person
+JOIN income
+	ON person.ssn = income.ssn
+JOIN drivers_license
+	ON person.license_id = drivers_license.id
+JOIN facebook_event_checkin
+	ON facebook_event_checkin.person_id = person.id
+WHERE gender = "female"
+AND car_make = "Tesla"
+AND car_model = "Model S"
+AND hair_color = "red"
+AND event_name = "SQL Symphony Concert"
